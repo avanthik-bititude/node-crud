@@ -5,6 +5,7 @@ const {
   viewAll,
   fetchUser,
   updateUser,
+  deleteUser,
 } = require("../controllers/user");
 
 const router = express.Router();
@@ -23,5 +24,8 @@ router.get("/:id", fetchUser);
 
 //update user
 router.put("/:id", updateUser);
+
+//delete user route
+router.delete("/:id", deleteUser);
 
 module.exports = router;

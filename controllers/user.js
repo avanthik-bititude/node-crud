@@ -212,4 +212,28 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { signup, signin, viewAll, fetchUser, updateUser };
+//delete user
+const deleteUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const isDeleted = await UserModel.destroy({ where: { id: id } });
+    if (isDeleted === 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "no item found",
+      });
+    }
+    return res.status(200).json({
+      status: "success",
+      message: "successfully deleted",
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      status: "error",
+      message: "internal server error",
+    });
+  }
+};
+
+module.exports = { signup, signin, viewAll, fetchUser, updateUser, deleteUser };
