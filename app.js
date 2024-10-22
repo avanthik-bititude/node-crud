@@ -15,7 +15,7 @@ sequelize
   .sync()
   .then(() => {
     app.listen(process.env.PORT || 3001, () => {
-      console.log("server running on ", process.env.PORT || 3001);
+      console.log("server running on " + process.env.PORT || 3001);
     });
   })
   .catch((error) => {
