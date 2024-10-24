@@ -18,6 +18,9 @@ const UserModel = sequelize.define("users", {
     allowNull: false,
     unique: true,
   },
+  role:{
+    type:
+  },
   password: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,

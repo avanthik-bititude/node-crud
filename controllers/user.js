@@ -150,7 +150,7 @@ const fetchUser = async (req, res) => {
     });
   }
   try {
-    const {id} = matchedData(req);
+    const { id } = matchedData(req);
     console.log(id);
     const dbUser = await UserModel.findByPk(id, {
       attributes: {
@@ -189,7 +189,7 @@ const updateUser = async (req, res) => {
     });
   }
   try {
-    const {id} = matchedData(req);
+    const { id } = matchedData(req);
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -233,7 +233,7 @@ const deleteUser = async (req, res) => {
     });
   }
   try {
-    const {id} = matchedData(req);
+    const { id } = matchedData(req);
     const isDeleted = await UserModel.destroy({ where: { id: id } });
     if (isDeleted === 0) {
       return res.status(400).json({
