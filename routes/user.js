@@ -8,6 +8,8 @@ const {
   deleteUser,
 } = require("../controllers/user");
 const { body, param } = require("express-validator");
+const authenticate = require("../middlewares/authentication");
+const isAdmin = require("../middlewares/isAdmin");
 
 const router = express.Router();
 
@@ -38,6 +40,7 @@ router.post(
       .notEmpty()
       .isLength({ min: 6, max: 12 })
       .withMessage("password should be atleast 6 char and maximum 12 char"),
+    body("role").optional().trim().escape(),
   ],
   signup
 );
@@ -62,12 +65,13 @@ router.post(
 );
 
 //Get all users
-router.get("/", viewAll);
+router.get("/", authenticate, isAdmin, viewAll);
 
 //view user
 router.get(
   "/:id",
   param("id").notEmpty().isInt().withMessage("id must be int").toInt(),
+  authenticate,
   fetchUser
 );
 
@@ -75,6 +79,7 @@ router.get(
 router.put(
   "/:id",
   param("id").notEmpty().isInt().withMessage("id must be int").toInt(),
+  authenticate,
   updateUser
 );
 
@@ -82,6 +87,7 @@ router.put(
 router.delete(
   "/:id",
   param("id").notEmpty().isInt().withMessage("id must be int").toInt(),
+  authenticate,
   deleteUser
 );
 
