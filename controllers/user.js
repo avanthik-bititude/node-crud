@@ -2,17 +2,21 @@ const UserModel = require("../models/UserModel");
 const hashFunction = require("../util/hashFunction");
 const bcyrpt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { validationResult, matchedData } = require("express-validator");
 
 //user signup controller
 const signup = async (req, res) => {
+  const errors = validationResult(req);
+  console.error(errors);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({
+      status: "error",
+      message: "validation errors",
+      error: errors.array(),
+    });
+  }
   try {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
-      return res.status(400).json({
-        status: "error",
-        message: "missing input",
-      });
-    }
+    const { username, email, password } = matchedData(req);
     const existingUser = await UserModel.findOne({ where: { email } });
     console.log(existingUser);
     if (existingUser) {
@@ -55,14 +59,16 @@ const signup = async (req, res) => {
 
 //user signin controller
 const signin = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({
+      status: "error",
+      message: "validation error",
+      error: errors,
+    });
+  }
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({
-        status: "error",
-        message: "missing input",
-      });
-    }
+    const { email, password } = matchedData(req);
     const dbUser = await UserModel.findOne({ where: { email } });
     if (!dbUser) {
       return res.status(404).json({
@@ -135,14 +141,17 @@ const viewAll = async (req, res) => {
 
 //view user
 const fetchUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({
+      status: "error",
+      message: "validation error",
+      error: errors,
+    });
+  }
   try {
-    const id = req.params.id;
-    if (!id) {
-      return res.status(400).json({
-        status: "error",
-        message: "id missing",
-      });
-    }
+    const {id} = matchedData(req);
+    console.log(id);
     const dbUser = await UserModel.findByPk(id, {
       attributes: {
         exclude: ["password"],
@@ -171,19 +180,20 @@ const fetchUser = async (req, res) => {
 
 //update user
 const updateUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({
+      status: "error",
+      message: "validation error",
+      error: errors,
+    });
+  }
   try {
-    const id = req.params.id;
-    if (!id) {
-      return res.status(400).json({
-        status: "error",
-        message: "id missing",
-      });
-    }
+    const {id} = matchedData(req);
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
     const hashedPassword = await hashFunction(password);
-
     const dbUser = await UserModel.findByPk(id);
     if (!dbUser) {
       return res.status(400).json({
@@ -212,4 +222,36 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { signup, signin, viewAll, fetchUser, updateUser };
+//delete user
+const deleteUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({
+      status: "error",
+      message: "validation error",
+      error: errors,
+    });
+  }
+  try {
+    const {id} = matchedData(req);
+    const isDeleted = await UserModel.destroy({ where: { id: id } });
+    if (isDeleted === 0) {
+      return res.status(400).json({
+        status: "error",
+        message: "no item found",
+      });
+    }
+    return res.status(200).json({
+      status: "success",
+      message: "successfully deleted",
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      status: "error",
+      message: "internal server error",
+    });
+  }
+};
+
+module.exports = { signup, signin, viewAll, fetchUser, updateUser, deleteUser };

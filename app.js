@@ -13,11 +13,11 @@ app.use("/user", user);
 
 sequelize
   .sync()
-  .then((result) => {
+  .then(() => {
     app.listen(process.env.PORT || 3001, () => {
-      console.log("server running on ", process.env.PORT || 3001);
+      console.log("server running on " + process.env.PORT || 3001);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.error(error);
   });
