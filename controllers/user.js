@@ -12,11 +12,11 @@ const signup = async (req, res) => {
     return res.status(404).json({
       status: "error",
       message: "validation errors",
-      error: errors.array(),
+      error: errors,
     });
   }
   try {
-    const { username, email, password } = matchedData(req);
+    const { username, email, password, role } = matchedData(req);
     const existingUser = await UserModel.findOne({ where: { email } });
     console.log(existingUser);
     if (existingUser) {
@@ -35,6 +35,7 @@ const signup = async (req, res) => {
     const newUser = await UserModel.create({
       username,
       email,
+      role,
       password: hashedPassword,
     });
     if (!newUser) {
@@ -84,7 +85,7 @@ const signin = async (req, res) => {
       });
     } else {
       jwt.sign(
-        { id: dbUser.id, email: dbUser.email },
+        { id: dbUser.id, email: dbUser.email, role: dbUser.role },
         process.env.JWTKEY,
         { expiresIn: "1d" },
         (err, token) => {
