@@ -7,7 +7,7 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers/user");
-const { body, param } = require("express-validator");
+const { body, param, header } = require("express-validator");
 const authenticate = require("../middlewares/authentication");
 const isAdmin = require("../middlewares/isAdmin");
 
@@ -65,11 +65,24 @@ router.post(
 );
 
 //Get all users
-router.get("/", authenticate, isAdmin, viewAll);
+router.get(
+  "/",
+  header("Authorization")
+    .exists()
+    .withMessage("Authorization needed")
+    .isString(),
+  authenticate,
+  isAdmin,
+  viewAll
+);
 
 //view user
 router.get(
   "/:id",
+  header("Authorization")
+    .exists()
+    .withMessage("Authorization needed")
+    .isString(),
   param("id").notEmpty().isInt().withMessage("id must be int").toInt(),
   authenticate,
   fetchUser
@@ -78,6 +91,10 @@ router.get(
 //update user
 router.put(
   "/:id",
+  header("Authorization")
+    .exists()
+    .withMessage("Authorization needed")
+    .isString(),
   param("id").notEmpty().isInt().withMessage("id must be int").toInt(),
   authenticate,
   updateUser
@@ -86,6 +103,10 @@ router.put(
 //delete user route
 router.delete(
   "/:id",
+  header("Authorization")
+    .exists()
+    .withMessage("Authorization needed")
+    .isString(),
   param("id").notEmpty().isInt().withMessage("id must be int").toInt(),
   authenticate,
   deleteUser
