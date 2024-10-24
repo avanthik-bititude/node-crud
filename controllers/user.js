@@ -115,6 +115,14 @@ const signin = async (req, res) => {
 
 //view all users
 const viewAll = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({
+      status: "error",
+      message: "validation error",
+      error: errors,
+    });
+  }
   try {
     const users = await UserModel.findAll({
       attributes: { exclude: ["password"] },
