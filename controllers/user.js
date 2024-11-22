@@ -9,7 +9,7 @@ const signup = async (req, res) => {
   const errors = validationResult(req);
   console.error(errors);
   if (!errors.isEmpty()) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "error",
       message: "validation errors",
       error: errors,
@@ -62,7 +62,7 @@ const signup = async (req, res) => {
 const signin = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "error",
       message: "validation error",
       error: errors,
@@ -72,7 +72,7 @@ const signin = async (req, res) => {
     const { email, password } = matchedData(req);
     const dbUser = await UserModel.findOne({ where: { email } });
     if (!dbUser) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: "error",
         message: "no user found",
       });
@@ -117,7 +117,7 @@ const signin = async (req, res) => {
 const viewAll = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "error",
       message: "validation error",
       error: errors,
@@ -128,7 +128,7 @@ const viewAll = async (req, res) => {
       attributes: { exclude: ["password"] },
     });
     if (!users) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: "error",
         message: "no users found",
       });
@@ -152,7 +152,7 @@ const viewAll = async (req, res) => {
 const fetchUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "error",
       message: "validation error",
       error: errors,
@@ -167,7 +167,7 @@ const fetchUser = async (req, res) => {
       },
     });
     if (!dbUser) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: "error",
         message: "no user found",
       });
@@ -191,7 +191,7 @@ const fetchUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "error",
       message: "validation error",
       error: errors,
@@ -235,7 +235,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(404).json({
+    return res.status(400).json({
       status: "error",
       message: "validation error",
       error: errors,
