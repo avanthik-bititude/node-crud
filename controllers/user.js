@@ -60,15 +60,15 @@ const signup = async (req, res) => {
 
 //user signin controller
 const signin = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      status: "error",
-      message: "validation error",
-      error: errors,
-    });
-  }
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "error",
+        message: "validation error",
+        error: errors,
+      });
+    }
     const { email, password } = matchedData(req);
     const dbUser = await UserModel.findOne({ where: { email } });
     if (!dbUser) {
