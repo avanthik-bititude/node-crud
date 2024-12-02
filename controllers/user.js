@@ -6,6 +6,7 @@ const { validationResult, matchedData } = require("express-validator");
 
 //user signup controller
 const signup = async (req, res) => {
+  console.log(req);
   const errors = validationResult(req);
   console.error(errors);
   if (!errors.isEmpty()) {
@@ -49,7 +50,6 @@ const signup = async (req, res) => {
       message: "user signup successfull",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: "error",
       message: "internal server error",
