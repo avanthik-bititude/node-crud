@@ -1,6 +1,6 @@
 const express = require("express");
 const ProductsModel = require("../models/Products");
-const { validationResult, matchedData } = require("express-validator");
+const { matchedData } = require("express-validator");
 
 const viewAllProducts = async (req, res) => {
   try {
@@ -26,16 +26,7 @@ const viewAllProducts = async (req, res) => {
 
 const addProducts = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "error",
-        message: "validation error",
-        error: errors,
-      });
-    }
-    const { name, description } = req.body;
-    console.log(name, description);
+    const { name, description } = matchedData(req);
     if ((!name, !description)) {
       return res.status(404).json({
         status: "error",
