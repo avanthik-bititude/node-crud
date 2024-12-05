@@ -1,7 +1,5 @@
-import { describe, it, vi } from "vitest";
-import { validationResult } from "express-validator";
-import { signup } from "./user";
+import { describe } from "vitest";
 
-describe("Test express-validator with mock", () => {
+describe("user contoller", () => {
   it("should ", () => {});
 });

@@ -1,6 +1,5 @@
 const isAdmin = (req, res, next) => {
   try {
-    console.log(req);
     if (req.user && req.user.role !== "admin") {
       return res.status(404).json({
         status: "error",
@@ -11,7 +10,7 @@ const isAdmin = (req, res, next) => {
   } catch (error) {
     return res.status(500).json({
       status: "error",
-      message: "isadmin middleware error",
+      message: "isAdmin middleware error",
     });
   }
 };

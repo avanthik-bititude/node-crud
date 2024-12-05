@@ -7,39 +7,49 @@ const { matchedData } = require("express-validator");
 //user signup controller
 const signup = async (req, res) => {
   try {
+    console.log("request", req.body);
     const { username, email, password, role } = matchedData(req);
-    const existingUser = await UserModel.findOne({ where: { email } });
-    console.log(existingUser);
-    if (existingUser) {
+    console.log("matched Data:", username, email, password);
+    if (!username) {
       return res.status(400).json({
-        status: "error",
-        message: "user already exist",
+        status: "no username",
       });
     }
-    const hashedPassword = await hashFunction(password);
-    if (!hashedPassword) {
-      return res.status(400).json({
-        status: "error",
-        message: "missing hashed password",
-      });
-    }
-    const newUser = await UserModel.create({
-      username,
-      email,
-      role,
-      password: hashedPassword,
-    });
-    if (!newUser) {
-      return res.status(400).json({
-        status: "error",
-        message: "user signup failed",
-      });
-    }
-    return res.status(201).json({
+    return res.status(200).json({
       status: "success",
-      message: "user signup successfull",
     });
+    // const existingUser = await UserModel.findOne({ where: { email } });
+    // if (existingUser) {
+    //   return res.status(400).json({
+    //     status: "error",
+    //     message: "user already exist",
+    //   });
+    // }
+    // const hashedPassword = await hashFunction(password);
+    // if (!hashedPassword) {
+    //   return res.status(400).json({
+    //     status: "error",
+    //     message: "missing hashed password",
+    //   });
+    // }
+    // const newUser = await UserModel.create({
+    //   username,
+    //   email,
+    //   role,
+    //   password: hashedPassword,
+    // });
+    // if (!newUser) {
+    //   return res.status(400).json({
+    //     status: "error",
+    //     message: "user signup failed",
+    //   });
+    // }
+    // return res.status(201).json({
+    //   status: "success",
+    //   message: "user signup successfull",
+    // });
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({
       status: "error",
       message: "internal server error",
