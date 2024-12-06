@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import validator from "./validator";
+import { validator } from "./validator.js";
 import { body } from "express-validator";
 
 describe("validator middleware", () => {

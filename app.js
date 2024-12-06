@@ -1,11 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const sequelize = require("./util/database");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
 
-const user = require("./routes/user");
-const products = require("./routes/products");
+const app = express();
+import sequelize from "./util/database.js";
+
+import dotenv from "dotenv";
+dotenv.config();
+
+import user from "./routes/user.js";
+import products from "./routes/products.js";
 
 app.use(express.json());
 app.use(cors());

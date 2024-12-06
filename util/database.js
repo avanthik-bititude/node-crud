@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+import Sequelize from "sequelize";
 
 const sequelize = new Sequelize("node_crud", "root", "Bititude123@", {
   dialect: "mysql",
@@ -16,4 +16,4 @@ const testConnection = async () => {
 
 testConnection();
 
-module.exports = sequelize;
+export default sequelize;

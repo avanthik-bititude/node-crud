@@ -1,8 +1,7 @@
-const Sequalize = require("sequelize");
+import Sequalize from "sequelize";
+import sequelize from "../util/database.js";
 
-const sequalize = require("../util/database");
-
-const ProductsModel = sequalize.define("products", {
+const ProductsModel = sequelize.define("products", {
   id: {
     type: Sequalize.DataTypes.INTEGER,
     primaryKey: true,
@@ -19,4 +18,4 @@ const ProductsModel = sequalize.define("products", {
   },
 });
 
-module.exports = ProductsModel;
+export default ProductsModel;
