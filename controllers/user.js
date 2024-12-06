@@ -3,19 +3,12 @@ import { hashFunction } from "../util/hashFunction.js";
 import bcyrpt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { matchedData } from "express-validator";
-import { createNewUser } from "./services/user.js";
+// import { createNewUser } from "../services/user.js";
 
 //user signup controller
 export const signup = async (req, res) => {
   try {
-    console.log("request", req.body);
     const { username, email, password, role } = matchedData(req);
-    console.log("matched Data:", username, email, password);
-    if (!username) {
-      return res.status(400).json({
-        status: "no username",
-      });
-    }
     const existingUser = await UserModel.findOne({ where: { email } });
 
     if (existingUser) {
@@ -25,13 +18,19 @@ export const signup = async (req, res) => {
       });
     }
     const hashedPassword = await hashFunction(password);
+
     if (!hashedPassword) {
       return res.status(400).json({
         status: "error",
         message: "missing hashed password",
       });
     }
-    const newUser = await createNewUser(hashedPassword, username, email, role);
+    const newUser = await UserModel.create({
+      username,
+      email,
+      role,
+      password: hashedPassword,
+    });
     if (!newUser) {
       return res.status(400).json({
         status: "error",

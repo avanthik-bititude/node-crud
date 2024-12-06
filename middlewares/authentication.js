@@ -8,6 +8,7 @@ export const authenticate = (req, res, next) => {
         return res.status(401).json({
           status: "error",
           message: "unautherized user",
+          error: error.message,
         });
       } else {
         req.user = decoded;
