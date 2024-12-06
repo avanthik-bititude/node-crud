@@ -42,6 +42,7 @@ describe("authentication middleware", () => {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
     };
+
     const error = "authentication error";
     vi.spyOn(jwt, "verify").mockImplementation((token, secretKey, callback) => {
       callback(error, null);
