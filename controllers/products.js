@@ -1,8 +1,7 @@
-const express = require("express");
-const ProductsModel = require("../models/Products");
-const { matchedData } = require("express-validator");
+import ProductsModel from "../models/Products.js";
+import { matchedData } from "express-validator";
 
-const viewAllProducts = async (req, res) => {
+export const viewAllProducts = async (req, res) => {
   try {
     const products = await ProductsModel.findAll();
     if (Array.isArray(products) && products.length > 0) {
@@ -24,7 +23,7 @@ const viewAllProducts = async (req, res) => {
   }
 };
 
-const addProducts = async (req, res) => {
+export const addProducts = async (req, res) => {
   try {
     const { name, description } = matchedData(req);
     if ((!name, !description)) {
@@ -48,5 +47,3 @@ const addProducts = async (req, res) => {
     });
   }
 };
-
-module.exports = { addProducts, viewAllProducts };

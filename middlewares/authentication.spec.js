@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import jwt from "jsonwebtoken";
-import authenticate from "./authentication";
+import { authenticate } from "./authentication.js";
 
 describe("authentication middleware", () => {
   it("should call next()", () => {

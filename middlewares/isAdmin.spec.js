@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import isAdmin from "./isAdmin";
+import { describe, expect, it, vi } from "vitest";
+import { isAdmin } from "./isAdmin.js";
 
 describe("isAdmin middleware", () => {
   const next = vi.fn();
@@ -37,7 +37,7 @@ describe("isAdmin middleware", () => {
     };
 
     isAdmin(mockReq, mockRes, next);
-    
+
     expect(mockRes.status).toHaveBeenCalledWith(404);
     expect(mockRes.json).toHaveBeenCalledWith({
       status: "error",

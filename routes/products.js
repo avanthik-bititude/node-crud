@@ -1,8 +1,8 @@
-const express = require("express");
-const { viewAllProducts, addProducts } = require("../controllers/products");
-const authenticate = require("../middlewares/authentication");
-const { header, body } = require("express-validator");
-const validator = require("../middlewares/validator");
+import express from "express";
+import { viewAllProducts, addProducts } from "../controllers/products.js";
+import { authenticate } from "../middlewares/authentication.js";
+import { header, body } from "express-validator";
+import { validator } from "../middlewares/validator.js";
 
 const router = express.Router();
 
@@ -39,4 +39,4 @@ router.post(
   addProducts
 );
 
-module.exports = router;
+export default router;

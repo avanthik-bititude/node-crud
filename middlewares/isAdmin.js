@@ -1,4 +1,4 @@
-const isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   try {
     if (req.user && req.user.role !== "admin") {
       return res.status(404).json({
@@ -14,5 +14,3 @@ const isAdmin = (req, res, next) => {
     });
   }
 };
-
-module.exports = isAdmin;

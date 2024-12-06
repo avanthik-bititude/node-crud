@@ -1,11 +1,12 @@
-const UserModel = require("../models/UserModel");
-const hashFunction = require("../util/hashFunction");
-const bcyrpt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { matchedData } = require("express-validator");
+import UserModel from "../models/UserModel.js";
+import { hashFunction } from "../util/hashFunction.js";
+import bcyrpt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { matchedData } from "express-validator";
+import { createNewUser } from "./services/user.js";
 
 //user signup controller
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     console.log("request", req.body);
     const { username, email, password, role } = matchedData(req);
@@ -15,39 +16,32 @@ const signup = async (req, res) => {
         status: "no username",
       });
     }
-    return res.status(200).json({
+    const existingUser = await UserModel.findOne({ where: { email } });
+
+    if (existingUser) {
+      return res.status(400).json({
+        status: "error",
+        message: "user already exist",
+      });
+    }
+    const hashedPassword = await hashFunction(password);
+    if (!hashedPassword) {
+      return res.status(400).json({
+        status: "error",
+        message: "missing hashed password",
+      });
+    }
+    const newUser = await createNewUser(hashedPassword, username, email, role);
+    if (!newUser) {
+      return res.status(400).json({
+        status: "error",
+        message: "user signup failed",
+      });
+    }
+    return res.status(201).json({
       status: "success",
+      message: "user signup successfull",
     });
-    // const existingUser = await UserModel.findOne({ where: { email } });
-    // if (existingUser) {
-    //   return res.status(400).json({
-    //     status: "error",
-    //     message: "user already exist",
-    //   });
-    // }
-    // const hashedPassword = await hashFunction(password);
-    // if (!hashedPassword) {
-    //   return res.status(400).json({
-    //     status: "error",
-    //     message: "missing hashed password",
-    //   });
-    // }
-    // const newUser = await UserModel.create({
-    //   username,
-    //   email,
-    //   role,
-    //   password: hashedPassword,
-    // });
-    // if (!newUser) {
-    //   return res.status(400).json({
-    //     status: "error",
-    //     message: "user signup failed",
-    //   });
-    // }
-    // return res.status(201).json({
-    //   status: "success",
-    //   message: "user signup successfull",
-    // });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({
@@ -59,7 +53,7 @@ const signup = async (req, res) => {
 };
 
 //user signin controller
-const signin = async (req, res) => {
+export const signin = async (req, res) => {
   try {
     const { email, password } = matchedData(req);
     const dbUser = await UserModel.findOne({ where: { email } });
@@ -106,7 +100,7 @@ const signin = async (req, res) => {
 };
 
 //view all users
-const viewAll = async (req, res) => {
+export const viewAll = async (req, res) => {
   try {
     const users = await UserModel.findAll({
       attributes: { exclude: ["password"] },
@@ -133,7 +127,7 @@ const viewAll = async (req, res) => {
 };
 
 //view user
-const fetchUser = async (req, res) => {
+export const fetchUser = async (req, res) => {
   try {
     const { id } = matchedData(req);
     console.log(id);
@@ -164,7 +158,7 @@ const fetchUser = async (req, res) => {
 };
 
 //update user
-const updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   try {
     const { id } = matchedData(req);
     const username = req.body.username;
@@ -200,7 +194,7 @@ const updateUser = async (req, res) => {
 };
 
 //delete user
-const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   try {
     const { id } = matchedData(req);
     const isDeleted = await UserModel.destroy({ where: { id: id } });
@@ -222,5 +216,3 @@ const deleteUser = async (req, res) => {
     });
   }
 };
-
-module.exports = { signup, signin, viewAll, fetchUser, updateUser, deleteUser };

@@ -1,16 +1,17 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   signup,
   signin,
   viewAll,
   fetchUser,
   updateUser,
   deleteUser,
-} = require("../controllers/user");
-const { body, param, header } = require("express-validator");
-const authenticate = require("../middlewares/authentication");
-const isAdmin = require("../middlewares/isAdmin");
-const validator = require("../middlewares/validator");
+} from "../controllers/user.js";
+import { body, param, header } from "express-validator";
+import { authenticate } from "../middlewares/authentication.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
+import { validator } from "../middlewares/validator.js";
+
 const router = express.Router();
 
 //signup route
@@ -118,4 +119,4 @@ router.delete(
   deleteUser
 );
 
-module.exports = router;
+export default router;
