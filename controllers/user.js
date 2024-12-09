@@ -3,6 +3,9 @@ import { hashFunction } from "../util/hashFunction.js";
 import bcyrpt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { matchedData } from "express-validator";
+import dotenv from "dotenv";
+dotenv.config();
+
 // import { createNewUser } from "../services/user.js";
 
 //user signup controller
@@ -42,7 +45,6 @@ export const signup = async (req, res) => {
       message: "user signup successfull",
     });
   } catch (error) {
-    console.log(error.message);
     return res.status(500).json({
       status: "error",
       message: "internal server error",
@@ -104,7 +106,7 @@ export const viewAll = async (req, res) => {
     const users = await UserModel.findAll({
       attributes: { exclude: ["password"] },
     });
-    if (!users) {
+    if (users.length <= 0) {
       return res.status(400).json({
         status: "error",
         message: "no users found",
@@ -135,7 +137,7 @@ export const fetchUser = async (req, res) => {
         exclude: ["password"],
       },
     });
-    if (!dbUser) {
+    if (dbUser.length <= 0) {
       return res.status(400).json({
         status: "error",
         message: "no user found",
@@ -165,7 +167,7 @@ export const updateUser = async (req, res) => {
     const password = req.body.password;
     const hashedPassword = await hashFunction(password);
     const dbUser = await UserModel.findByPk(id);
-    if (!dbUser) {
+    if (dbUser.length <= 0) {
       return res.status(400).json({
         status: "error",
         message: "no user found",
