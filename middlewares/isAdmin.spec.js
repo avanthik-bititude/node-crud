@@ -42,7 +42,6 @@ describe("isAdmin middleware", () => {
       role: "user",
     });
     const next = vi.fn();
-
     isAdmin(req, res, next);
     expect(res.json).toHaveBeenCalledWith({
       status: "error",

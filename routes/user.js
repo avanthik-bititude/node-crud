@@ -11,7 +11,6 @@ import { body, param, header } from "express-validator";
 import { authenticate } from "../middlewares/authentication.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import { validator } from "../middlewares/validator.js";
-
 const router = express.Router();
 
 //signup route

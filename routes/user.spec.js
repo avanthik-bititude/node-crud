@@ -68,14 +68,12 @@ describe("POST /register", () => {
     vi.spyOn(utils, "hashFunction").mockImplementation((password) => {
       return null;
     });
-
     const response = await request(app).post("/user/register").send({
       username: "user100",
       email: "guser4@gmail.com",
       password: "user100",
       role: "user",
     });
-
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("missing hashed password");
   });
@@ -95,11 +93,9 @@ describe("POST /register", () => {
     vi.spyOn(utils, "hashFunction").mockImplementation((password) => {
       return "hashedSecured" + password;
     });
-
     vi.spyOn(UserModel, "create").mockImplementation((data) => {
       return false;
     });
-
     const response = await request(app).post("/user/register").send({
       username: "avanthik",
       email: "guser7@gmail.com",
@@ -125,18 +121,15 @@ describe("POST /register", () => {
     vi.spyOn(utils, "hashFunction").mockImplementation((password) => {
       return "hashedSecured" + password;
     });
-
     vi.spyOn(UserModel, "create").mockImplementation((data) => {
       return true;
     });
-
     const response = await request(app).post("/user/register").send({
       username: "avanthik",
       email: "guser7@gmail.com",
       password: "avanthik",
       role: "user",
     });
-
     expect(response.status).toBe(201);
     expect(response.body.message).toBe("user signup successfull");
   });
@@ -145,14 +138,12 @@ describe("POST /register", () => {
     vi.spyOn(UserModel, "findOne").mockRejectedValue(
       new Error("somthing error")
     );
-
     const response = await request(app).post("/user/register").send({
       username: "avanthik",
       email: "guser7@gmail.com",
       password: "avanthik",
       role: "user",
     });
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });
@@ -171,7 +162,6 @@ describe("POST /signin", () => {
       }
       return Promise.resolve(null);
     });
-
     const response = await request(app).post("/user/login").send({
       email: "user@gmail.com",
       password: "user11",
@@ -194,12 +184,10 @@ describe("POST /signin", () => {
     });
 
     vi.spyOn(bcrypt, "compare").mockResolvedValue(false);
-
     const response = await request(app).post("/user/login").send({
       email: "avanthik@gmail.com",
       password: "wrongPassword",
     });
-
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("invalid email or password");
   });
@@ -216,19 +204,16 @@ describe("POST /signin", () => {
       }
       return Promise.resolve(null);
     });
-
     vi.spyOn(bcrypt, "compare").mockResolvedValue(true);
     const mockJwtSign = vi
       .spyOn(jwt, "sign")
       .mockImplementation((payload, secretKey, expires, callback) => {
         callback("error", null);
       });
-
     const response = await request(app).post("/user/login").send({
       email: "avanthik@gmail.com",
       password: "avanthik",
     });
-
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("unautherized user");
     mockJwtSign.mockRestore();
@@ -246,14 +231,12 @@ describe("POST /signin", () => {
       }
       return Promise.resolve(null);
     });
-
     vi.spyOn(bcrypt, "compare").mockResolvedValue(true);
     const mockJwtSign = vi
       .spyOn(jwt, "sign")
       .mockImplementation((payload, secretKey, expires, callback) => {
         callback(null, "token");
       });
-
     const response = await request(app).post("/user/login").send({
       email: "avanthik@gmail.com",
       password: "avanthik",
@@ -268,12 +251,10 @@ describe("POST /signin", () => {
     vi.spyOn(UserModel, "findOne").mockRejectedValue(
       new Error("somthing error")
     );
-
     const response = await request(app).post("/user/login").send({
       email: "guser7@gmail.com",
       password: "avanthik",
     });
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });
@@ -310,18 +291,15 @@ describe("GET /", () => {
       iat: 1733716149,
       exp: 1733802549,
     };
-
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       "NODE_CRUD",
       { expiresIn: "1d" }
     );
-
     vi.spyOn(UserModel, "findAll").mockResolvedValue([]);
     const response = await request(app)
       .get("/user/")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("no users found");
   });
@@ -332,13 +310,10 @@ describe("GET /", () => {
       { username: "user2", email: "user2@gmail.com" },
       { username: "user3", email: "user3@gmail.com" },
     ]);
-
     const token = adminSignin();
-
     const response = await request(app)
       .get("/user/")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.body.message).toBe("successfully fetched");
     expect(response.status).toBe(200);
   });
@@ -347,12 +322,10 @@ describe("GET /", () => {
     vi.spyOn(UserModel, "findAll").mockRejectedValue(
       new Error("somthing error")
     );
-
     const token = adminSignin();
     const response = await request(app)
       .get("/user/")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });
@@ -375,14 +348,13 @@ describe("GET /:id", () => {
     );
     return token;
   };
+  
   it("GET /:id - No user found - Return 400 no user found", async () => {
     vi.spyOn(UserModel, "findByPk").mockResolvedValue([]);
     const token = userSignin();
-
     const response = await request(app)
       .get(`/user/1`)
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("no user found");
   });
@@ -400,7 +372,6 @@ describe("GET /:id", () => {
     const response = await request(app)
       .get(`/user/1`)
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("data fetched successfully");
   });
@@ -409,12 +380,10 @@ describe("GET /:id", () => {
     vi.spyOn(UserModel, "findByPk").mockRejectedValue(
       new Error("somthing error")
     );
-
     const token = userSignin();
     const response = await request(app)
       .get("/user/1")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });
@@ -437,14 +406,13 @@ describe("PUT /:id", () => {
     );
     return token;
   };
+
   it("PUT /:id - No user found - Return 400 no user found", async () => {
     vi.spyOn(utils, "hashFunction").mockImplementation((password) => {
       return "hashedSecured" + password;
     });
-
     vi.spyOn(UserModel, "findByPk").mockResolvedValue([]);
     const token = userSignin();
-
     const response = await request(app)
       .put("/user/1")
       .set("Authorization", `Bearer ${token}`);
@@ -456,7 +424,6 @@ describe("PUT /:id", () => {
     vi.spyOn(utils, "hashFunction").mockImplementation((password) => {
       return "hashedSecured" + password;
     });
-
     const mockUser = {
       id: 1,
       username: "user1",
@@ -475,15 +442,12 @@ describe("PUT /:id", () => {
         ],
       ]),
     };
-
     vi.spyOn(UserModel, "findByPk").mockResolvedValue(mockUser);
-
     const token = userSignin();
     const response = await request(app)
       .put("/user/1")
       .set("Authorization", `Bearer ${token}`)
       .send({ username: "updatedUsername", email: "updatedEmail@gmail.com" });
-
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("data updated successfully");
   });
@@ -492,12 +456,10 @@ describe("PUT /:id", () => {
     vi.spyOn(UserModel, "findByPk").mockRejectedValue(
       new Error("somthing error")
     );
-
     const token = userSignin();
     const response = await request(app)
       .put("/user/1")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });
@@ -520,13 +482,13 @@ describe("DELETE /:id", () => {
     );
     return token;
   };
+
   it("DELETE /:id - Nonexistent user - Return 400 no item found", async () => {
     vi.spyOn(UserModel, "destroy").mockResolvedValue(0);
     const token = userSignin();
     const response = await request(app)
       .delete("/user/5")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("no item found");
   });
@@ -534,24 +496,21 @@ describe("DELETE /:id", () => {
   it("DELETE /:id - Success - Return 200 successfully deleted", async () => {
     const token = userSignin();
     vi.spyOn(UserModel, "destroy").mockResolvedValue(1);
-
     const response = await request(app)
       .delete("/user/5")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("successfully deleted");
   });
+
   it("POST /register - Server error - Return 500 internal server error", async () => {
     vi.spyOn(UserModel, "destroy").mockRejectedValue(
       new Error("somthing error")
     );
-
     const token = userSignin();
     const response = await request(app)
       .delete("/user/1")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });

@@ -26,7 +26,6 @@ describe("validator middleware", () => {
         .isLength({ min: 6 })
         .withMessage("Password is too short"),
     ];
-
     const req = {
       body: {
         username: "avanthik ",
@@ -34,7 +33,6 @@ describe("validator middleware", () => {
         password: "short",
       },
     };
-
     const res = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
@@ -45,7 +43,6 @@ describe("validator middleware", () => {
     await validationMiddleware[2](req, res, () => {});
     const next = vi.fn();
     validator(req, res, next);
-
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       status: "error",

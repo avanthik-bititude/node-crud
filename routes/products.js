@@ -33,7 +33,6 @@ router.post(
       .notEmpty()
       .withMessage("not valid description"),
   ],
-
   authenticate,
   validator,
   addProducts
