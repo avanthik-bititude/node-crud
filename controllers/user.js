@@ -6,8 +6,6 @@ import { matchedData } from "express-validator";
 import dotenv from "dotenv";
 dotenv.config();
 
-// import { createNewUser } from "../services/user.js";
-
 //user signup controller
 export const signup = async (req, res) => {
   try {
