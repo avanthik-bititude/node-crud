@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import express, { response } from "express";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import express from "express";
 import request from "supertest";
 import router from "./user.js";
 import UserModel from "../models/UserModel.js";
