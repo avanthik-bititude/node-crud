@@ -13,13 +13,11 @@ describe("authentication middleware", () => {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
     };
-
     const decoded = {
       username: "testname",
       email: "test@gmail.com",
       password: "testpassword",
     };
-
     vi.spyOn(jwt, "verify").mockImplementation(
       (token, secretValue, callback) => {
         callback(null, decoded);
@@ -37,19 +35,16 @@ describe("authentication middleware", () => {
         authorization: "Bearer THisismytoken",
       },
     };
-
     const mockRes = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
     };
-
     const error = "authentication error";
     vi.spyOn(jwt, "verify").mockImplementation((token, secretKey, callback) => {
       callback(error, null);
     });
     const next = vi.fn();
     authenticate(mockReq, mockRes, next);
-
     expect(next).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(401);
     expect(mockRes.json).toHaveBeenCalledWith({

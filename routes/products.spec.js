@@ -19,7 +19,6 @@ const userSignin = () => {
     iat: 1733716149,
     exp: 1733802549,
   };
-
   const token = jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     "NODE_CRUD",
@@ -32,11 +31,9 @@ describe("GET /viewAll", () => {
   it("GET /viewAll - No products - Return 404 no data found", async () => {
     vi.spyOn(ProductsModel, "findAll").mockResolvedValue([]);
     const token = userSignin();
-
     const response = await request(app)
       .get("/products/viewAll")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(404);
     expect(response.body.message).toBe("No products found");
   });
@@ -56,11 +53,9 @@ describe("GET /viewAll", () => {
     ];
     vi.spyOn(ProductsModel, "findAll").mockResolvedValue(mockData);
     const token = userSignin();
-
     const response = await request(app)
       .get("/products/viewAll")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(200);
     expect(response.body.status).toBe("success");
     expect(response.body.data).toEqual(mockData);
@@ -71,11 +66,9 @@ describe("GET /viewAll", () => {
       new Error("somthing new error")
     );
     const token = userSignin();
-
     const response = await request(app)
       .get("/products/viewAll")
       .set("Authorization", `Bearer ${token}`);
-
     expect(response.status).toBe(500);
     expect(response.body.message).toBe("internal server error");
   });
@@ -95,7 +88,6 @@ describe("POST /addProduct", () => {
         name: "product 1",
         description: "prd",
       });
-
     expect(response.status).toBe(200);
     expect(response.body.message).toBe("successfully added new product");
   });
